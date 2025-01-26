@@ -1,5 +1,3 @@
-from turtledemo.chaos import coosys
-
 import aiomysql
 import asyncio
 from app.database.models import async_session, User, Quiz, QuizQuestion, QuizAnswer, UserQuiz, Admin
@@ -130,3 +128,14 @@ async def get_history(session, user_id):
     )
     history = result.scalars().all()
     return history
+
+
+@connection
+async def delete_quiz(session, quiz_id):
+    await session.execute(delete(Quiz).where(Quiz.id == quiz_id))
+    await session.commit()
+
+
+@connection
+async def quizlist(session):
+    return await session.scalars(select(Quiz))
